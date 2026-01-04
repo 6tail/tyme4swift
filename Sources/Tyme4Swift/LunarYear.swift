@@ -3,7 +3,7 @@ import Foundation
 /// 农历年
 public class LunarYear: YearUnit {
     private static let lock: NSLock = NSLock()
-    static var LEAP: [[Int]] {
+    static var LEAP: [[Int]] = {
         lock.lock()
         defer {
             lock.unlock() 
@@ -43,7 +43,7 @@ public class LunarYear: YearUnit {
             leap.append(l)
         }
         return leap
-    }
+    }()
 
     required override init(_ year: Int) throws {
         try Self.validate(year)

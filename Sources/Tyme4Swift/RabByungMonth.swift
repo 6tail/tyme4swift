@@ -3,7 +3,7 @@ import Foundation
 /// 藏历月
 public class RabByungMonth: AbstractTyme {
     private static let lock: NSLock = NSLock()
-    static var CACHE: [Int: [Int]] {
+    static var CACHE: [Int: [Int]] = {
         lock.lock()
         defer {
             lock.unlock()
@@ -36,7 +36,7 @@ public class RabByungMonth: AbstractTyme {
             m = 0
         }
         return cache
-    }
+    }()
 
     static let NAMES = ["正月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"]
 
