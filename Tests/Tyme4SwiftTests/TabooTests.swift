@@ -38,4 +38,22 @@ final class TabooTests: XCTestCase {
             taboos
         )
     }
+    
+    func test4() throws {
+        let taboos = try SolarDay.fromYmd(2026, 1, 6).getLunarDay().recommends.map { $0.getName() }
+
+        XCTAssertEqual(
+            ["祭祀", "解除", "修饰垣墙", "平治道涂", "馀事勿取"],
+            taboos
+        )
+    }
+    
+    func test5() throws {
+        let taboos = try SolarDay.fromYmd(2026, 1, 6).getLunarDay().avoids.map { $0.getName() }
+
+        XCTAssertEqual(
+            [],
+            taboos
+        )
+    }
 }

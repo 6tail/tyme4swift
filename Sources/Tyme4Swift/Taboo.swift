@@ -54,7 +54,7 @@ public class Taboo: LoopTyme {
     
     class func getTaboos(_ data: [String], _ supIndex: Int, _ subIndex: Int, _ index: Int) -> [Taboo] {
         var l: [Taboo] = [Taboo]()
-        let d: String = String(String(data[supIndex].split(separator: ";")[subIndex]).split(separator: ",")[index])
+        let d: String = String(String(data[supIndex].split(separator: ";", omittingEmptySubsequences: false)[subIndex]).split(separator: ",", omittingEmptySubsequences: false)[index])
         for i in stride(from: 0, to: d.count, by: 2) {
             l.append(Self.fromIndex(Int(String(d.dropFirst(i).prefix(2)), radix: 16)!))
         }
