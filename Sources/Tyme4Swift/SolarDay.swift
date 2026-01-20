@@ -113,7 +113,7 @@ public class SolarDay: DayUnit {
             y += 1
             i = 0
         }
-        var term: SolarTerm = SolarTerm.fromIndex(y, i)
+        var term: SolarTerm = SolarTerm.fromIndex(y, i + 1)
         var d: SolarDay = term.getSolarDay()
         while isBefore(d) {
             term = term.next(-1)

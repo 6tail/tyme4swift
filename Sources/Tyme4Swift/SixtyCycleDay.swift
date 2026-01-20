@@ -16,26 +16,17 @@ public class SixtyCycleDay: AbstractTyme {
     }
 
     public class func fromSolarDay(_ solarDay: SolarDay) throws -> Self {
-        let solarYear: Int = solarDay.year
-        let springSolarDay: SolarDay = SolarTerm.fromIndex(solarYear, 3).getSolarDay()
-        let lunarDay: LunarDay = solarDay.getLunarDay()
-        var lunarYear: LunarYear = lunarDay.lunarMonth.lunarYear
-        if lunarYear.year == solarYear {
-            if solarDay.isBefore(springSolarDay) {
-                lunarYear = try lunarYear.next(-1)
-            }
-        } else if lunarYear.year < solarYear {
-            if !solarDay.isBefore(springSolarDay) {
-                lunarYear = try lunarYear.next(1)
-            }
-        }
-
         let term: SolarTerm = solarDay.term
-        var index: Int = term.index - 3
-        if index < 0 && term.getSolarDay().isAfter(springSolarDay) {
-            index += 24
+        let index: Int = term.index
+        var offset: Int = -1
+        if index < 3 {
+            if index == 0 {
+                offset = -2
+            }
+        } else {
+            offset = (index - 3) / 2
         }
-        return Self(solarDay, SixtyCycleMonth(try! SixtyCycleYear.fromYear(lunarYear.year), try! LunarMonth.fromYm(solarYear, 1).sixtyCycle.next(Int(floor(Double(index) * 0.5)))), lunarDay.sixtyCycle)
+        return Self(solarDay, try SixtyCycleYear.fromYear(term.year).firstMonth.next(offset), SixtyCycle.fromIndex(solarDay.subtract(try SolarDay.fromYmd(2000, 1, 7))))
     }
 
     public override func getName() -> String {
