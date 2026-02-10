@@ -37,28 +37,31 @@ public class LunarFestival: AbstractTyme {
             }
             return Self(type: FestivalType.DAY, day: d, term: nil, data: String(Self.DATA[Range(matcher.range, in: Self.DATA)!]))
         }
+        guard let lunarDay = try? LunarDay.fromYmd(year, month, day) else {
+            return nil
+        }
+        let solarDay: SolarDay = lunarDay.getSolarDay()
 
         regex = try! NSRegularExpression(pattern: "@\\d{2}1\\d{2}")
         let matches = regex.matches(in: Self.DATA, range: NSRange(Self.DATA.startIndex..., in: Self.DATA))
         for matcher in matches {
             let data: String = String(Self.DATA[Range(matcher.range, in: Self.DATA)!])
             let term: SolarTerm = SolarTerm.fromIndex(year, Int(String(data.dropFirst(4)))!)
-            let d: LunarDay = term.getSolarDay().getLunarDay()
-            if d.year == year && d.month == month && d.day == day {
-                return Self(type: FestivalType.TERM, day: d, term: term, data: data)
+            let termDay: SolarDay = term.getSolarDay()
+            if termDay.year == solarDay.year && termDay.month == solarDay.month && termDay.day == solarDay.day {
+                return Self(type: FestivalType.TERM, day: lunarDay, term: term, data: data)
             }
         }
 
-        regex = try! NSRegularExpression(pattern: "@\\d{2}2")
-        if let matcher = regex.firstMatch(in: Self.DATA, range: NSRange(Self.DATA.startIndex..., in: Self.DATA)) {
-            guard let d = try? LunarDay.fromYmd(year, month, day) else {
-                return nil
-            }
-            guard let nextDay = try? d.next(1) else {
-                return nil
-            }
-            if nextDay.month == 1 && nextDay.day == 1 {
-                return Self(type: FestivalType.EVE, day: d, term: nil, data: String(Self.DATA[Range(matcher.range, in: Self.DATA)!]))
+        if month == 12 && day > 28 {
+            regex = try! NSRegularExpression(pattern: "@\\d{2}2")
+            if let matcher = regex.firstMatch(in: Self.DATA, range: NSRange(Self.DATA.startIndex..., in: Self.DATA)) {
+                guard let nextDay = try? lunarDay.next(1) else {
+                    return nil
+                }
+                if nextDay.month == 1 && nextDay.day == 1 {
+                    return Self(type: FestivalType.EVE, day: lunarDay, term: nil, data: String(Self.DATA[Range(matcher.range, in: Self.DATA)!]))
+                }
             }
         }
         return nil
