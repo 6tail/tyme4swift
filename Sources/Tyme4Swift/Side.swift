@@ -5,40 +5,32 @@ public enum Side: Int {
 
     public func getName() -> String {
         switch self {
-        case .IN:
-            return "内"
-        case .OUT:
-            return "外"
+        case .IN: return "内"
+        case .OUT: return "外"
         }
     }
     
     public func getCode() -> Int {
         switch self {
-        case .IN:
-            return 0
-        case .OUT:
-            return 1
+        case .IN: return 0
+        case .OUT: return 1
         }
     }
     
     public static func fromCode(_ code: Int) -> Self? {
-        if code == 0 {
-            return .IN
+        switch code {
+        case 0: return .IN
+        case 1: return .OUT
+        default: return nil
         }
-        if code == 1 {
-            return .OUT
-        }
-        return nil
     }
 
     public static func fromName(_ name: String) -> Self? {
-        if name == "内" {
-            return .IN
+        switch name {
+        case "内": return .IN
+        case "外": return .OUT
+        default: return nil
         }
-        if name == "外" {
-            return .OUT
-        }
-        return nil
     }
     
     public var description: String {

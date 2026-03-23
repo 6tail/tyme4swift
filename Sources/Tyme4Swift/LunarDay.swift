@@ -49,7 +49,8 @@ public class LunarDay: DayUnit {
             return year < target.year
         }
         if month != target.month {
-            return abs(month) < abs(target.month)
+            let t: Int = abs(target.month)
+            return month == t || abs(month) < t
         }
         return day < target.day
     }
@@ -59,7 +60,8 @@ public class LunarDay: DayUnit {
             return year > target.year
         }
         if month != target.month {
-            return abs(month) >= abs(target.month)
+            let t: Int = abs(month)
+            return t == target.month || t > abs(target.month)
         }
         return day > target.day
     }
@@ -71,8 +73,7 @@ public class LunarDay: DayUnit {
 
     /// 干支
     public var sixtyCycle: SixtyCycle {
-        let offset: Int = Int(lunarMonth.firstJulianDay.next(day - 12).day)
-        return try! SixtyCycle.fromName(HeavenStem.fromIndex(offset).getName() + EarthBranch.fromIndex(offset).getName())
+        SixtyCycle.fromIndex(Int(lunarMonth.firstJulianDay.next(day - 12).day))
     }
 
     /// 九星

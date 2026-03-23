@@ -51,4 +51,15 @@ public class LoopTyme: AbstractTyme {
     func stepsTo(_ targetIndex: Int) -> Int {
         indexOf(targetIndex - index)
     }
+    
+    func stepsBackTo(_ targetIndex: Int) -> Int {
+        let n: Int = size
+        return -((index - targetIndex + n) % n)
+    }
+    
+    func stepsCloseTo(_ targetIndex: Int) -> Int {
+        let d1: Int = stepsTo(targetIndex)
+        let d2: Int = stepsBackTo(targetIndex)
+        return d1 <= abs(d2) ? d1 : d2
+    }
 }

@@ -49,12 +49,13 @@ public class LunarHour: SecondUnit {
     }
 
     public var sixtyCycle: SixtyCycle {
-        let earthBranchIndex: Int = indexInDay % 12
-        var d: SixtyCycle = lunarDay.sixtyCycle
-        if hour >= 23 {
-            d = d.next(1)
+        var e: Int = indexInDay
+        var h: HeavenStem = lunarDay.sixtyCycle.heavenStem
+        if (hour >= 23) {
+            h = h.next(1)
+            e = 0
         }
-        return try! SixtyCycle.fromName(HeavenStem.fromIndex(d.heavenStem.index % 5 * 2 + earthBranchIndex).getName() + EarthBranch.fromIndex(earthBranchIndex).getName())
+        return SixtyCycle.fromIndex(h.index * 12 + e)
     }
 
     public var indexInDay: Int {
@@ -103,7 +104,7 @@ public class LunarHour: SecondUnit {
         let solar: SolarDay = lunarDay.getSolarDay()
         let dongZhi: SolarTerm = SolarTerm.fromIndex(solar.year, 0)
         let earthBranchIndex: Int = indexInDay % 12
-        var index: Int = [8, 5, 2 ][lunarDay.sixtyCycle.earthBranch.index % 3]
+        var index: Int = 8 - 3 * (lunarDay.sixtyCycle.earthBranch.index % 3)
         if !solar.isBefore(dongZhi.julianDay.getSolarDay()) && solar.isBefore(dongZhi.next(12).julianDay.getSolarDay()) {
             index = 8 + earthBranchIndex - index
         } else {

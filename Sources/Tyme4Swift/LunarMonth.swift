@@ -164,7 +164,7 @@ public class LunarMonth: MonthUnit {
 
     /// 干支
     public var sixtyCycle: SixtyCycle {
-        try! SixtyCycle.fromName(HeavenStem.fromIndex(lunarYear.sixtyCycle.heavenStem.index * 2 + month + 1).getName() + EarthBranch.fromIndex(month + 1).getName())
+        SixtyCycle.fromIndex(year * 12 + month - 47)
     }
 
     /// 九星

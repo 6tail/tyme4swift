@@ -53,13 +53,13 @@ public class LunarFestival: AbstractTyme {
             }
         }
 
-        if month == 12 && day > 28 {
+        if abs(month) == 12 && day > 28 {
             regex = try! NSRegularExpression(pattern: "@\\d{2}2")
             if let matcher = regex.firstMatch(in: Self.DATA, range: NSRange(Self.DATA.startIndex..., in: Self.DATA)) {
                 guard let nextDay = try? lunarDay.next(1) else {
                     return nil
                 }
-                if nextDay.month == 1 && nextDay.day == 1 {
+                if nextDay.year != year {
                     return Self(type: FestivalType.EVE, day: lunarDay, term: nil, data: String(Self.DATA[Range(matcher.range, in: Self.DATA)!]))
                 }
             }

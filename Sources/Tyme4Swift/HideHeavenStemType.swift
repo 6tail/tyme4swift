@@ -6,50 +6,36 @@ public enum HideHeavenStemType: Int {
 
     public func getName() -> String {
         switch self {
-        case .RESIDUAL:
-            return "余气"
-        case .MIDDLE:
-            return "中气"
-        case .MAIN:
-            return "本气"
+        case .RESIDUAL: return "余气"
+        case .MIDDLE: return "中气"
+        case .MAIN: return "本气"
         }
     }
     
     public func getCode() -> Int {
         switch self {
-        case .RESIDUAL:
-            return 0
-        case .MIDDLE:
-            return 1
-        case .MAIN:
-            return 1
+        case .RESIDUAL: return 0
+        case .MIDDLE: return 1
+        case .MAIN: return 2
         }
     }
     
     public static func fromCode(_ code: Int) -> Self? {
-        if code == 0 {
-            return .RESIDUAL
+        switch code {
+        case 0: return .RESIDUAL
+        case 1: return .MIDDLE
+        case 2: return .MAIN
+        default: return nil
         }
-        if code == 1 {
-            return .MIDDLE
-        }
-        if code == 2 {
-            return .MAIN
-        }
-        return nil
     }
 
     public static func fromName(_ name: String) -> Self? {
-        if name == "余气" {
-            return .RESIDUAL
+        switch name {
+        case "余气": return .RESIDUAL
+        case "中气": return .MIDDLE
+        case "本气": return .MAIN
+        default: return nil
         }
-        if name == "中气" {
-            return .MIDDLE
-        }
-        if name == "本气" {
-            return .MAIN
-        }
-        return nil
     }
     
     public var description: String {

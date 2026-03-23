@@ -82,7 +82,7 @@ public class SixtyCycleHour: AbstractTyme {
         let solar: SolarDay = solarTime.solarDay
         let dongZhi: SolarTerm = SolarTerm.fromIndex(solar.year, 0)
         let earthBranchIndex: Int = indexInDay % 12
-        var index: Int = [8, 5, 2 ][day.earthBranch.index % 3]
+        var index: Int = 8 - 3 * (day.earthBranch.index % 3)
         if (!solar.isBefore(dongZhi.julianDay.getSolarDay()) && solar.isBefore(dongZhi.next(12).julianDay.getSolarDay())) {
             index = 8 + earthBranchIndex - index
         } else {

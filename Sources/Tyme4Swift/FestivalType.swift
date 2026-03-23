@@ -6,50 +6,36 @@ public enum FestivalType: Int {
 
     public func getName() -> String {
         switch self {
-        case .DAY:
-            return "日期"
-        case .TERM:
-            return "节气"
-        case .EVE:
-            return "除夕"
+        case .DAY: return "日期"
+        case .TERM: return "节气"
+        case .EVE: return "除夕"
         }
     }
     
     public func getCode() -> Int {
         switch self {
-        case .DAY:
-            return 0
-        case .TERM:
-            return 1
-        case .EVE:
-            return 2
+        case .DAY: return 0
+        case .TERM: return 1
+        case .EVE: return 2
         }
     }
     
     public static func fromCode(_ code: Int) -> Self? {
-        if code == 0 {
-            return .DAY
+        switch code {
+        case 0: return .DAY
+        case 1: return .TERM
+        case 2: return .EVE
+        default: return nil
         }
-        if code == 1 {
-            return .TERM
-        }
-        if code == 2 {
-            return .EVE
-        }
-        return nil
     }
 
     public static func fromName(_ name: String) -> Self? {
-        if name == "日期" {
-            return .DAY
+        switch name {
+        case "日期": return .DAY
+        case "节气": return .TERM
+        case "除夕": return .EVE
+        default: return nil
         }
-        if name == "节气" {
-            return .TERM
-        }
-        if name == "除夕" {
-            return .EVE
-        }
-        return nil
     }
     
     public var description: String {

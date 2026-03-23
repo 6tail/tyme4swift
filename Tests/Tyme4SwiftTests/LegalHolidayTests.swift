@@ -17,7 +17,7 @@ final class LegalHolidayTests: XCTestCase {
     func test3() {
         let d = LegalHoliday.fromYmd(2001, 12, 29)
         XCTAssertNotNil(d)
-        XCTAssertEqual("2001年12月29日 元旦节(班)", d?.description)
+        XCTAssertEqual("2001年12月29日 元旦(班)", d?.description)
         XCTAssertNil(d?.next(-1))
     }
 

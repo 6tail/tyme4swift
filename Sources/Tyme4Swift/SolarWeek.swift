@@ -50,10 +50,9 @@ public class SolarWeek: WeekUnit {
     }
 
     public override func next(_ n: Int) throws -> Self {
-        var d: Int = index
+        var d: Int = index + n
         var m: SolarMonth = solarMonth
         if n > 0 {
-            d += n
             var weekCount: Int = m.getWeekCount(startIndex)
             while d >= weekCount {
                 d -= weekCount
@@ -64,7 +63,6 @@ public class SolarWeek: WeekUnit {
                 weekCount = m.getWeekCount(startIndex)
             }
         } else if n < 0 {
-            d += n
             while d < 0 {
                 if m.firstDay.week.index != startIndex {
                     d -= 1

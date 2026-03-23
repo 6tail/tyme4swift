@@ -22,14 +22,14 @@ final class SolarFestivalTests: XCTestCase {
     func test2() {
         let f = SolarFestival.fromIndex(2023, 0)
         XCTAssertNotNil(f)
-        XCTAssertEqual("2024年5月1日 五一劳动节", f?.next(13)?.description)
-        XCTAssertEqual("2022年8月1日 八一建军节", f?.next(-3)?.description)
+        XCTAssertEqual("2024年5月1日 劳动节", f?.next(13)?.description)
+        XCTAssertEqual("2022年8月1日 建军节", f?.next(-3)?.description)
     }
 
     func test3() {
         let f = SolarFestival.fromIndex(2023, 0)
         XCTAssertNotNil(f)
-        XCTAssertEqual("2022年3月8日 三八妇女节", f?.next(-9)?.description)
+        XCTAssertEqual("2022年3月8日 妇女节", f?.next(-9)?.description)
     }
 
     func test4() throws {
@@ -41,7 +41,7 @@ final class SolarFestivalTests: XCTestCase {
     func test5() throws {
         let f = try SolarDay.fromYmd(2021, 5, 4).festival
         XCTAssertNotNil(f)
-        XCTAssertEqual("2021年5月4日 五四青年节", f!.description)
+        XCTAssertEqual("2021年5月4日 青年节", f!.description)
     }
 
     func test6() {

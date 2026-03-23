@@ -5,40 +5,32 @@ public enum Gender: Int {
 
     public func getName() -> String {
         switch self {
-        case .WOMAN:
-            return "女"
-        case .MAN:
-            return "男"
+        case .WOMAN: return "女"
+        case .MAN: return "男"
         }
     }
     
     public func getCode() -> Int {
         switch self {
-        case .WOMAN:
-            return 0
-        case .MAN:
-            return 1
+        case .WOMAN: return 0
+        case .MAN: return 1
         }
     }
     
     public static func fromCode(_ code: Int) -> Self? {
-        if code == 0 {
-            return .WOMAN
+        switch code {
+        case 0: return .WOMAN
+        case 1: return .MAN
+        default: return nil
         }
-        if code == 1 {
-            return .MAN
-        }
-        return nil
     }
 
     public static func fromName(_ name: String) -> Self? {
-        if name == "女" {
-            return .WOMAN
+        switch name {
+        case "女": return .WOMAN
+        case "男": return .MAN
+        default: return nil
         }
-        if name == "男" {
-            return .MAN
-        }
-        return nil
     }
     
     public var description: String {

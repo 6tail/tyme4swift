@@ -16,8 +16,8 @@ Pod::Spec.new do |spec|
   #
 
   spec.name         = "Tyme4Swift"
-  spec.version      = "1.4.4"
-  spec.summary      = "A calendar library for Solar and Chinese Lunar."
+  spec.version      = "1.4.5"
+  spec.summary      = "A powerful Chinese calendar library supporting solar calendar, lunar calendar, 24 solar terms, constellations, zodiac signs, eight characters and more."
 
   # This description is used to generate tags and improve search results.
   #   * Think: What does it do? Why did you write it? What is the focus?

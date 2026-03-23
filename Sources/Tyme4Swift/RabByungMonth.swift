@@ -1,7 +1,7 @@
 import Foundation
 
 /// 藏历月
-public class RabByungMonth: AbstractTyme {
+public class RabByungMonth: MonthUnit {
     private static let lock: NSLock = NSLock()
     static var CACHE: [Int: [Int]] = {
         lock.lock()
@@ -41,66 +41,57 @@ public class RabByungMonth: AbstractTyme {
     static let NAMES = ["正月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"]
 
     static let ALIASES = ["神变月", "苦行月", "具香月", "萨嘎月", "作净月", "明净月", "具醉月", "具贤月", "天降月", "持众月", "庄严月", "满意月"]
-
-    let rabByungYear: RabByungYear
-    let month: Int
     let isLeap: Bool
-    let indexInYear: Int
-
-    required init(year: RabByungYear, month: Int) throws {
+    
+    public class func validate(_ year: Int, _ month: Int) throws {
         if month == 0 || month > 12 || month < -12 {
             throw ArgumentError("illegal rab-byung month: \(month)")
         }
-
-        let y = year.year
-        if y < 1950 || y > 2050 {
-            throw ArgumentError("rab-byung year \(y) must between 1950 and 2050")
+        if year < 1950 || year > 2050 {
+            throw ArgumentError("rab-byung year \(year) must between 1950 and 2050")
+        }
+        let m: Int = abs(month)
+        if year == 1950 && m < 12 {
+            throw ArgumentError("month \(month) must be 12 in rab-byung year \(year)")
         }
 
-        let m = abs(month)
-        if y == 1950 && m < 12 {
-            throw ArgumentError("month \(month) must be 12 in rab-byung year \(y)")
-        }
-
-        let leap = month < 0
-        let leapMonth = year.leapMonth
+        let leap: Bool = month < 0
+        let leapMonth: Int = try RabByungYear.fromYear(year).leapMonth
 
         if leap && m != leapMonth {
-            throw ArgumentError("illegal leap month \(m) in rab-byung year \(y)")
+            throw ArgumentError("illegal leap month \(m) in rab-byung year \(year)")
         }
-        self.rabByungYear = year
-        self.month = m
-        self.isLeap = leap
-
-        var index = m - 1
-        if leap || (0 < leapMonth && leapMonth < m) {
-            index += 1
-        }
-        self.indexInYear = index
     }
 
-    required convenience init(year: Int, month: Int) throws {
-        try self.init(year: RabByungYear.fromYear(year), month: month)
-    }
-
-    required convenience init(rabByungIndex: Int, element: RabByungElement, zodiac: Zodiac, month: Int) throws {
-        try self.init(year: RabByungYear.fromElementZodiac(rabByungIndex, element, zodiac), month: month)
+    required override init(_ year: Int, _ month: Int) throws {
+        try Self.validate(year, month)
+        isLeap = month < 0
+        try super.init(year, abs(month))
     }
 
     public class func fromYm(_ year: Int, _ month: Int) throws -> Self {
-        try Self(year: year, month: month)
+        try Self(year, month)
     }
 
-    public class func fromElementZodiac(_ rabByungIndex: Int, _ element: RabByungElement, _ zodiac: Zodiac, _ month: Int) throws -> Self {
-        try Self(rabByungIndex: rabByungIndex, element: element, zodiac: zodiac, month: month)
-    }
-
-    public var year: Int {
-        rabByungYear.year
+    public var rabByungYear: RabByungYear {
+        try! RabByungYear.fromYear(year)
     }
 
     public var monthWithLeap: Int {
         isLeap ? -month : month
+    }
+    
+    public var indexInYear: Int {
+        var index: Int = month - 1
+        if isLeap {
+            index += 1
+        } else {
+            let leapMonth: Int = rabByungYear.leapMonth
+            if leapMonth > 0 && month > leapMonth {
+                index += 1
+            }
+        }
+        return index
     }
 
     public override func getName() -> String {
@@ -152,7 +143,7 @@ public class RabByungMonth: AbstractTyme {
     }
 
     public var firstDay: RabByungDay {
-        try! RabByungDay(month: self, day: 1)
+        try! RabByungDay(year, monthWithLeap, 1)
     }
 
     public var dayCount: Int {
@@ -163,15 +154,15 @@ public class RabByungMonth: AbstractTyme {
         var l: [RabByungDay] = []
         let missDaysSet: Set = Set(missDays)
         let leapDaysSet: Set = Set(leapDays)
-
+        let m: Int = monthWithLeap
         for i in 1 ... 30 {
             if missDaysSet.contains(i) {
                 continue
             }
 
-            l.append(try! RabByungDay(month: self, day: i))
+            l.append(try! RabByungDay(year, m, i))
             if leapDaysSet.contains(i) {
-                l.append(try! RabByungDay(month: self, day: -i))
+                l.append(try! RabByungDay(year, m, -i))
             }
         }
 

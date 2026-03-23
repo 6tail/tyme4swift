@@ -123,10 +123,12 @@ public class LunarYear: YearUnit {
     /// 月份列表，一般有12个月，当年有闰月时，有13个月。
     public var months: [LunarMonth] {
         var l: [LunarMonth] = [LunarMonth]()
-        var m: LunarMonth = firstMonth
-        while m.year == year {
-            l.append(m)
-            m = try! m.next(1)
+        let m: Int = leapMonth
+        for i: Int in 1 ..< 13 {
+            l.append(try! LunarMonth.fromYm(year, i))
+            if i == m {
+                l.append(try! LunarMonth.fromYm(year, -i))
+            }
         }
         return l
     }

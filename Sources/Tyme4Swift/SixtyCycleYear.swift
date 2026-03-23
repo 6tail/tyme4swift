@@ -53,8 +53,7 @@ public class SixtyCycleYear: AbstractTyme {
 
     /// 首月（五虎遁：甲己之年丙作首，乙庚之岁戊为头，丙辛必定寻庚起，丁壬壬位顺行流，若问戊癸何方发，甲寅之上好追求。）
     public var firstMonth: SixtyCycleMonth {
-        let h: HeavenStem = HeavenStem.fromIndex((sixtyCycle.heavenStem.index + 1) * 2)
-        return SixtyCycleMonth(self, try! SixtyCycle.fromName("\(h.getName())寅"))
+        SixtyCycleMonth(self, SixtyCycle.fromIndex(year * 12 - 46))
     }
 
     /// 月份列表
