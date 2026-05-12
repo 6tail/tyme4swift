@@ -3,18 +3,20 @@ import Foundation
 /// 五行
 public class Element: LoopTyme {
     
-    public static var NAMES: [String] = ["木", "火", "土", "金", "水"]
+    public class var NAMES: [String] {
+        ["木", "火", "土", "金", "水"]
+    }
 
-    required init(index: Int? = nil, name: String? = nil) throws {
-        try super.init(Self.NAMES, index, name)
+    required init(_ names: [String], index: Int? = nil, name: String? = nil) throws {
+        try super.init(names, index, name)
     }
     
     public class func fromIndex(_ index: Int) -> Self {
-        try! Self(index: index)
+        try! Self(Self.NAMES, index: index)
     }
     
     public class func fromName(_ name: String) throws -> Self {
-        try Self(name: name)
+        try Self(Self.NAMES, name: name)
     }
     
     public override func next(_ n: Int) -> Self {

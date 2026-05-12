@@ -65,39 +65,7 @@ public class SixtyCycleDay: AbstractTyme {
 
     /// 九星
     public var nineStar: NineStar {
-        let dongZhi: SolarTerm = SolarTerm.fromIndex(solarDay.year, 0)
-        let dongZhiSolar: SolarDay = dongZhi.getSolarDay()
-        let xiaZhiSolar: SolarDay = dongZhi.next(12).getSolarDay()
-        let dongZhiSolar2: SolarDay = dongZhi.next(24).getSolarDay()
-        let dongZhiIndex: Int = dongZhiSolar.getLunarDay().sixtyCycle.index
-        let xiaZhiIndex: Int = xiaZhiSolar.getLunarDay().sixtyCycle.index
-        let dongZhiIndex2: Int = dongZhiSolar2.getLunarDay().sixtyCycle.index
-        var i: Int = -dongZhiIndex
-        if dongZhiIndex > 29 {
-            i += 60
-        }
-        let solarShunBai: SolarDay = try! dongZhiSolar.next(i)
-        i = -dongZhiIndex2
-        if dongZhiIndex2 > 29 {
-            i += 60
-        }
-        let solarShunBai2: SolarDay = try! dongZhiSolar2.next(i)
-        i = -xiaZhiIndex
-        if xiaZhiIndex > 29 {
-            i += 60
-        }
-        let solarNiZi: SolarDay = try! xiaZhiSolar.next(i)
-        var offset: Int = 0
-        if !solarDay.isBefore(solarShunBai) && solarDay.isBefore(solarNiZi) {
-            offset = solarDay.subtract(solarShunBai)
-        } else if !solarDay.isBefore(solarNiZi) && solarDay.isBefore(solarShunBai2) {
-            offset = 8 - solarDay.subtract(solarNiZi)
-        } else if !solarDay.isBefore(solarShunBai2) {
-            offset = solarDay.subtract(solarShunBai2)
-        } else if solarDay.isBefore(solarShunBai) {
-            offset = 8 + solarShunBai.subtract(solarDay)
-        }
-        return NineStar.fromIndex(offset)
+        solarDay.nineStar
     }
 
     /// 太岁方位

@@ -75,11 +75,11 @@ public class RabByungDay: DayUnit {
         isLeap ? -day : day
     }
 
-    override public func getName() -> String {
+    public override func getName() -> String {
         (isLeap ? "闰" : "") + Self.NAMES[day - 1]
     }
 
-    override public var description: String {
+    public override var description: String {
         "\(rabByungMonth)\(getName())"
     }
 
@@ -113,7 +113,7 @@ public class RabByungDay: DayUnit {
         return try! SolarDay.fromYmd(1951, 1, 7).next(n + t)
     }
 
-    override public func next(_ n: Int) throws -> Self {
+    public override func next(_ n: Int) throws -> Self {
         let d: RabByungDay = try getSolarDay().next(n).getRabByungDay()
         return try Self(d.year, d.month, d.dayWithLeap)
     }

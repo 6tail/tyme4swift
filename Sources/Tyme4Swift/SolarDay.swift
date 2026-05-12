@@ -160,46 +160,45 @@ public class SolarDay: DayUnit {
     public var phase: Phase {
         phaseDay.phase
     }
+    
+    /// 九星
+    public var nineStar: NineStar {
+        let winterSolstice: SolarDay = SolarTerm.fromIndex(year, 0).getSolarDay()
+        let summerSolstice: SolarDay = SolarTerm.fromIndex(year, 12).getSolarDay()
+        let nextWinterSolstice: SolarDay = SolarTerm.fromIndex(year + 1, 0).getSolarDay()
+        // 距冬至最近的甲子日
+        let w: SolarDay = try! winterSolstice.next(winterSolstice.getLunarDay().sixtyCycle.stepsCloseTo(0))
+        // 距夏至最近的甲子日
+        let s: SolarDay = try! summerSolstice.next(summerSolstice.getLunarDay().sixtyCycle.stepsCloseTo(0))
+        // 距下个冬至最近的甲子日
+        let n: SolarDay = try! nextWinterSolstice.next(nextWinterSolstice.getLunarDay().sixtyCycle.stepsCloseTo(0))
+        // 43210012345678876543210012345
+        //      w        s        n
+        //     冬至     夏至      冬至
+        if (isBefore(w)) {
+            return NineStar.fromIndex(w.subtract(self) - 1)
+        }
+        if (isBefore(s)) {
+            return NineStar.fromIndex(subtract(w))
+        }
+        return NineStar.fromIndex(isBefore(n) ? n.subtract(self) - 1 : subtract(n))
+    }
 
     /// 三伏天
     public var dogDay: DogDay? {
-        // 夏至
-        let xiaZhi: SolarTerm = SolarTerm.fromIndex(year, 12)
-        // 第1个庚日
-        var start: SolarDay = xiaZhi.getSolarDay()
-        // 第3个庚日，即初伏第1天
-        start = try! start.next(start.getLunarDay().sixtyCycle.heavenStem.stepsTo(6) + 20)
-        var days: Int = subtract(start)
-        // 初伏以前
-        if days < 0 {
+        // 初伏，夏至后第3个庚日
+        let d0: SolarDay = Event.builder().termHeavenStem(12, 6, 20).build().getSolarDay(year)!
+        // 中伏，夏至后第4个庚日
+        let d1: SolarDay = Event.builder().termHeavenStem(12, 6, 30).build().getSolarDay(year)!
+        // 末伏，立秋后第1个庚日
+        let d2: SolarDay = Event.builder().termHeavenStem(15, 6, 0).build().getSolarDay(year)!
+        if (isBefore(d0) || isAfter(try! d2.next(9))) {
             return nil
         }
-
-        if days < 10 {
-            return DogDay(Dog.fromIndex(0), days)
+        if (!isBefore(d2)) {
+            return DogDay(Dog.fromIndex(2), subtract(d2))
         }
-
-        // 第4个庚日，中伏第1天
-        start = try! start.next(10)
-        days = subtract(start)
-        if days < 10 {
-            return DogDay(Dog.fromIndex(1), days)
-        }
-
-        // 第5个庚日，中伏第11天或末伏第1天
-        start = try! start.next(10)
-        days = subtract(start)
-        // 立秋
-        if xiaZhi.next(3).getSolarDay().isAfter(start) {
-            if days < 10 {
-                return DogDay(Dog.fromIndex(1), days + 10)
-            }
-
-            start = try! start.next(10)
-            days = subtract(start)
-        }
-
-        return days < 10 ? DogDay(Dog.fromIndex(2), days) : nil
+        return isBefore(d1) ? DogDay(Dog.fromIndex(0), subtract(d0)) : DogDay(Dog.fromIndex(1), subtract(d1))
     }
 
     /// 数九天
@@ -220,21 +219,13 @@ public class SolarDay: DayUnit {
 
     /// 梅雨天（芒种后的第1个丙日入梅，小暑后的第1个未日出梅）
     public var plumRainDay: PlumRainDay? {
-        // 芒种
-        let grainInEar: SolarTerm = SolarTerm.fromIndex(year, 11)
-        var start: SolarDay = grainInEar.getSolarDay()
-        // 芒种后的第1个丙日
-        start = try! start.next(start.getLunarDay().sixtyCycle.heavenStem.stepsTo(2))
-
-        // 小暑
-        var end: SolarDay = grainInEar.next(2).getSolarDay()
-        // 小暑后的第1个未日
-        end = try! end.next(end.getLunarDay().sixtyCycle.earthBranch.stepsTo(7))
-
-        if isBefore(start) || isAfter(end) {
+        // 入梅，芒种后第1个丙日
+        let start: SolarDay = Event.builder().termHeavenStem(11, 2, 0).build().getSolarDay(year)!
+        // 出梅，小暑后第1个未日
+        let end: SolarDay = Event.builder().termEarthBranch(13, 7, 0).build().getSolarDay(year)!
+        if (isBefore(start) || isAfter(end)) {
             return nil
         }
-
         return self == end ? PlumRainDay(PlumRain.fromIndex(1), 0) : PlumRainDay(PlumRain.fromIndex(0), subtract(start))
     }
 

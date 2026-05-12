@@ -2,7 +2,7 @@ import Foundation
 
 /// 传统文化抽象
 public class AbstractCulture: NSObject, Culture {
-    override public var description: String {
+    public override var description: String {
         getName()
     }
 

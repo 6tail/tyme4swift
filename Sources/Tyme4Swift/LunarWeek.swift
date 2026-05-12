@@ -2,7 +2,6 @@ import Foundation
 
 /// 农历周
 public class LunarWeek: WeekUnit {
-    public static var NAMES: [String] = ["第一周", "第二周", "第三周", "第四周", "第五周", "第六周"]
 
     required override init(_ year: Int, _ month: Int, _ index: Int, _ start: Int) throws {
         try Self.validate(year, month, index, start)

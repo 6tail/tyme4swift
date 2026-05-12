@@ -3,6 +3,7 @@ import Foundation
 /// 九星
 public class NineStar: LoopTyme {
     public static var NAMES: [String] = ["一", "二", "三", "四", "五", "六", "七", "八", "九"]
+    public static var COLORS: [String] = ["白", "黑", "碧", "绿", "黄", "白", "赤", "白", "紫"]
 
     required init(index: Int? = nil, name: String? = nil) throws {
         try super.init(Self.NAMES, index, name)
@@ -22,12 +23,12 @@ public class NineStar: LoopTyme {
     
     /// 颜色
     public var color: String {
-        ["白", "黑", "碧", "绿", "黄", "白", "赤", "白", "紫"][index]
+        Self.COLORS[index]
     }
 
     /// 五行
     public var element: Element {
-        Element.fromIndex([4, 2, 0, 0, 2, 3, 3, 2, 1 ][index])
+        direction.getElement()
     }
 
     /// 北斗九星

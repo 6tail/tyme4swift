@@ -16,7 +16,7 @@ public class HeavenStem: LoopTyme {
         try Self(name: name)
     }
 
-    override public func next(_ n: Int) -> Self {
+    public override func next(_ n: Int) -> Self {
         Self.fromIndex(nextIndex(n))
     }
 

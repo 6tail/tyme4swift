@@ -2,6 +2,8 @@ import Foundation
 
 /// 周
 public class WeekUnit: MonthUnit {
+    public static var NAMES: [String] = ["第一周", "第二周", "第三周", "第四周", "第五周", "第六周"]
+    
     /// 索引，0-5
     public private(set) var index: Int
     

@@ -20,15 +20,15 @@ public class SolarTime: SecondUnit {
         try! SolarDay.fromYmd(year, month, day)
     }
 
-    override public func getName() -> String {
+    public override func getName() -> String {
         String(format: "%02d:%02d:%02d", hour, minute, second)
     }
 
-    override public var description: String {
+    public override var description: String {
         "\(solarDay) \(getName())"
     }
 
-    override public func next(_ n: Int) throws -> Self {
+    public override func next(_ n: Int) throws -> Self {
         if n == 0 {
             return try Self(year, month, day, hour, minute, second)
         }

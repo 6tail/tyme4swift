@@ -30,23 +30,34 @@ public class Event: AbstractCulture {
         }
         return nil
     }
+    
+    private func getCharIndex(_ index: Int) -> Int {
+        EventManager.CHARS.firstIndex(of: data[data.index(data.startIndex, offsetBy: index)]) ?? 0
+    }
+
+    func getValue(_ index: Int) -> Int {
+        return getCharIndex(index) - 31
+    }
+
+    func getMonth(_ year: Int) -> [Int] {
+        var y = year
+        var m = getValue(2)
+        if m > 12 {
+            m = 1
+            y += 1
+        }
+        return [y, m]
+    }
 
     public var type: EventType? {
-        guard data.count > 1 else { return nil }
-        if let idx = EventManager.CHARS.firstIndex(of: data[data.index(data.startIndex, offsetBy: 1)]) {
-            return EventType.fromCode(EventManager.CHARS.distance(from: EventManager.CHARS.startIndex, to: idx))
-        }
-        return nil
+        EventType.fromCode(getCharIndex(1))
     }
 
     public var startYear: Int {
         var n: Int = 0
         let size: Int = EventManager.CHARS.count
         for i in 0..<3 {
-            if let idx = EventManager.CHARS.firstIndex(of: data[data.index(data.startIndex, offsetBy: 6 + i)]) {
-                let pos = EventManager.CHARS.distance(from: EventManager.CHARS.startIndex, to: idx)
-                n = n * size + pos
-            }
+            n = n * size + getCharIndex(6 + i)
         }
         return n
     }
@@ -88,32 +99,17 @@ public class Event: AbstractCulture {
         }
 
         guard let d = d else { return nil }
-        let offset: Int = getOffset()
+        let offset: Int = getValue(5)
         return offset == 0 ? d : try? d.next(offset)
     }
 
-    private func getValue(at index: Int) -> Int {
-        if let idx = EventManager.CHARS.firstIndex(of: data[data.index(data.startIndex, offsetBy: index)]) {
-            return EventManager.CHARS.distance(from: EventManager.CHARS.startIndex, to: idx)
-        }
-        return 0
-    }
-
-    private func getOffset() -> Int {
-        getValue(at: 5) - 31
-    }
-
     private func getSolarDayBySolarDay(_ year: Int) -> SolarDay? {
-        var y: Int = year
-        var m: Int = getValue(at: 2) - 31
-        if m > 12 {
-            m = 1
-            y += 1
-        }
-        let d: Int = getValue(at: 3) - 31
-        let delay: Int = getValue(at: 4) - 31
-        let month: SolarMonth = try! SolarMonth.fromYm(y, m)
-        let lastDay: Int = month.dayCount
+        let month = getMonth(year)
+        let y = month[0]
+        let m = month[1]
+        let d = getValue(3)
+        let delay = getValue(4)
+        let lastDay: Int = try! SolarMonth.fromYm(y, m).dayCount
         if d > lastDay {
             if delay == 0 { return nil }
             if delay < 0 {
@@ -125,16 +121,12 @@ public class Event: AbstractCulture {
     }
 
     private func getSolarDayByLunarDay(_ year: Int) -> SolarDay? {
-        var y: Int = year
-        var m: Int = getValue(at: 2) - 31
-        if m > 12 {
-            m = 1
-            y += 1
-        }
-        let d: Int = getValue(at: 3) - 31
-        let delay: Int = getValue(at: 4) - 31
-        let month: LunarMonth = try! LunarMonth.fromYm(y, m)
-        let lastDay: Int = month.dayCount
+        let month = getMonth(year)
+        let y = month[0]
+        let m = month[1]
+        let d = getValue(3)
+        let delay = getValue(4)
+        let lastDay: Int = try! LunarMonth.fromYm(y, m).dayCount
         if d > lastDay {
             if delay == 0 { return nil }
             if delay < 0 {
@@ -146,10 +138,12 @@ public class Event: AbstractCulture {
     }
 
     private func getSolarDayByWeek(_ year: Int) -> SolarDay? {
-        let n: Int = getValue(at: 3) - 31
+        // 第几个星期
+        let n: Int = getValue(3)
         if n == 0 { return nil }
-        let month: SolarMonth = try! SolarMonth.fromYm(year, getValue(at: 2) - 31)
-        let w: Int = getValue(at: 4) - 31
+        let month: SolarMonth = try! SolarMonth.fromYm(year, getValue(2))
+        // 星期几，0-6
+        let w: Int = getValue(4)
         if n > 0 {
             let first: SolarDay = month.firstDay
             return try? first.next(first.week.stepsTo(w) + 7 * n - 7)
@@ -160,18 +154,22 @@ public class Event: AbstractCulture {
     }
 
     private func getSolarDayByTerm(_ year: Int) -> SolarDay? {
-        let offset: Int = getValue(at: 4) - 31
-        let d: SolarDay = SolarTerm.fromIndex(year, getValue(at: 2) - 31).getSolarDay()
+        let d: SolarDay = SolarTerm.fromIndex(year, getValue(2)).getSolarDay()
+        let offset: Int = getValue(4)
         return offset == 0 ? d : try? d.next(offset)
     }
 
     private func getSolarDayByTermHeavenStem(_ year: Int) -> SolarDay? {
         guard let d = getSolarDayByTerm(year) else { return nil }
-        return try? d.next(d.getLunarDay().sixtyCycle.heavenStem.stepsTo(getValue(at: 3) - 31))
+        return try? d.next(d.getLunarDay().sixtyCycle.heavenStem.stepsTo(getValue(3)))
     }
 
     private func getSolarDayByTermEarthBranch(_ year: Int) -> SolarDay? {
         guard let d = getSolarDayByTerm(year) else { return nil }
-        return try? d.next(d.getLunarDay().sixtyCycle.earthBranch.stepsTo(getValue(at: 3) - 31))
+        return try? d.next(d.getLunarDay().sixtyCycle.earthBranch.stepsTo(getValue(3)))
+    }
+    
+    public override func getName() -> String {
+        name
     }
 }

@@ -9,13 +9,19 @@ public class EventBuilder {
         self.name = name
         return self
     }
+    
+    private static func getChar(_ index: Int) -> Character {
+        EventManager.CHARS[index]
+    }
+    
+    private func setValue(_ index: Int, _ n: Int) -> Self {
+        data[index] = Self.getChar(31 + n)
+        return self
+    }
 
     private func content(_ type: EventType, _ a: Int, _ b: Int, _ c: Int) -> Self {
-        data[1] = EventManager.CHARS[type.getCode()]
-        data[2] = EventManager.CHARS[31 + a]
-        data[3] = EventManager.CHARS[31 + b]
-        data[4] = EventManager.CHARS[31 + c]
-        return self
+        data[1] = Self.getChar(type.getCode())
+        return setValue(2, a).setValue(3, b).setValue(4, c)
     }
 
     public func solarDay(_ solarMonth: Int, _ solarDay: Int, _ delayDays: Int) -> Self {
@@ -46,15 +52,14 @@ public class EventBuilder {
         let size = EventManager.CHARS.count
         var n = year
         for i in 0..<3 {
-            data[8 - i] = EventManager.CHARS[n % size]
+            data[8 - i] = Self.getChar(n % size)
             n /= size
         }
         return self
     }
 
     public func offset(_ days: Int) -> Self {
-        data[5] = EventManager.CHARS[31 + days]
-        return self
+        setValue(5, days)
     }
 
     public func build() -> Event {
