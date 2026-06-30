@@ -12,9 +12,7 @@ public class SolarMonth: MonthUnit {
     }
     
     public class func validate(_ year: Int, _ month: Int) throws {
-        if month < 1 || month > 12 {
-            throw ArgumentError("illegal solar month: \(month)")
-        }
+        try validateRange(month, 1, 12, "solar month")
         try SolarYear.validate(year)
     }
 

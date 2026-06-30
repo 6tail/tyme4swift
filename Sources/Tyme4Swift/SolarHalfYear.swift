@@ -14,9 +14,7 @@ public class SolarHalfYear: YearUnit {
     }
     
     public class func validate(_ year: Int, _ index: Int) throws {
-        if index < 0 || index > 1 {
-            throw ArgumentError("illegal solar half year index: \(index)")
-        }
+        try validateRange(index, 0, 1, "solar half year index")
         try SolarYear.validate(year)
     }
 

@@ -10,14 +10,15 @@ public class SolarDay: DayUnit {
     }
 
     public class func validate(_ year: Int, _ month: Int, _ day: Int) throws {
-        if day < 1 {
-            throw ArgumentError("illegal solar day: \(year)-\(month)-\(day)")
-        }
-        if 1582 == year && 10 == month {
-            if (day > 4 && day < 15) || day > 31 {
-                throw ArgumentError("illegal solar day: \(year)-\(month)-\(day)")
+        var illegal: Bool = day < 1
+        if !illegal {
+            if year == 1582 && month == 10 {
+                illegal = (day > 4 && day < 15) || day > 31
+            } else {
+                illegal = day > (try SolarMonth.fromYm(year, month).dayCount)
             }
-        } else if day > (try SolarMonth.fromYm(year, month)).dayCount {
+        }
+        if illegal {
             throw ArgumentError("illegal solar day: \(year)-\(month)-\(day)")
         }
     }
@@ -32,32 +33,9 @@ public class SolarDay: DayUnit {
 
     /// 星座
     public var constellation: Constellation {
-        var index: Int = 11
-        let y: Int = month * 100 + day
-        if y >= 321 && y <= 419 {
-            index = 0
-        } else if y >= 420 && y <= 520 {
-            index = 1
-        } else if y >= 521 && y <= 621 {
-            index = 2
-        } else if y >= 622 && y <= 722 {
-            index = 3
-        } else if y >= 723 && y <= 822 {
-            index = 4
-        } else if y >= 823 && y <= 922 {
-            index = 5
-        } else if y >= 923 && y <= 1023 {
-            index = 6
-        } else if y >= 1024 && y <= 1122 {
-            index = 7
-        } else if y >= 1123 && y <= 1221 {
-            index = 8
-        } else if y >= 1222 || y <= 119 {
-            index = 9
-        } else if y <= 218 {
-            index = 10
-        }
-        return Constellation.fromIndex(index)
+        let m: Int = month - 1
+        let offset: Int = (day > [19, 18, 20, 19, 20, 21, 22, 22, 22, 23, 22, 21][m]) ? 1 : 0;
+        return Constellation.fromIndex(9 + m + offset)
     }
     
     /// 公历月
@@ -83,17 +61,11 @@ public class SolarDay: DayUnit {
     }
 
     public func isBefore(_ target: SolarDay) -> Bool {
-        if year != target.year {
-            return year < target.year
-        }
-        return month != target.month ? month < target.month : day < target.day
+        getCompareIndex() < target.getCompareIndex()
     }
 
     public func isAfter(_ target: SolarDay) -> Bool {
-        if year != target.year {
-            return year > target.year
-        }
-        return month != target.month ? month > target.month : day > target.day
+        getCompareIndex() > target.getCompareIndex()
     }
 
     public func subtract(_ target: SolarDay) -> Int {
@@ -308,5 +280,18 @@ public class SolarDay: DayUnit {
     /// 公历周
     public func getSolarWeek(_ start: Int) -> SolarWeek {
         try! SolarWeek.fromYm(year, month, Int(ceil((Double(day + Self.fromYmd(year, month, 1).week.next(-start).index)) / 7.0)) - 1, start)
+    }
+    
+    /// 回历日
+    public func getHijriDay() -> HijriDay {
+        let s: SolarDay = try! SolarDay.fromYmd(622, 7, 16)
+        var d: Int = subtract(s)
+        let z: Int = floorDiv(d, 10631)
+        d -= z * 10631
+        let y: Int = Int(floor((Double(d) + 0.5) / 354.366))
+        d -= Int(floor(Double(y) * 354.366 + 0.5))
+        let m: Int = Int(floor((Double(d) + 0.11) / 29.51))
+        d -= Int(floor(Double(m) * 29.5 + 0.5))
+        return try! HijriDay.fromYmd(z * 30 + y + 1, m + 1, d + 1)
     }
 }

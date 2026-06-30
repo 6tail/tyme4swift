@@ -32,28 +32,10 @@ public class SolarTime: SecondUnit {
         if n == 0 {
             return try Self(year, month, day, hour, minute, second)
         }
-        var ts: Int = second + n
-        var tm: Int = minute + ts / 60
-        ts %= 60
-        if ts < 0 {
-            ts += 60
-            tm -= 1
-        }
-        var th: Int = hour + tm / 60
-        tm %= 60
-        if tm < 0 {
-            tm += 60
-            th -= 1
-        }
-        var td: Int = th / 24
-        th %= 24
-        if th < 0 {
-            th += 24
-            td -= 1
-        }
-
-        let d: SolarDay = try solarDay.next(td)
-        return try Self.fromYmdHms(d.year, d.month, d.day, th, tm, ts)
+        let t: Int = getSecondsInDay() + n
+        let s: Int = indexOf(t, 86400)
+        let d: SolarDay = try solarDay.next(floorDiv(t, 86400))
+        return try Self.fromYmdHms(d.year, d.month, d.day, s / 3600, s % 3600 / 60, s % 60)
     }
 
     public func getJulianDay() -> JulianDay {
@@ -61,48 +43,15 @@ public class SolarTime: SecondUnit {
     }
 
     public func isBefore(_ target: SolarTime) -> Bool {
-        let aDay: SolarDay = solarDay
-        let bDay: SolarDay = target.solarDay
-        if aDay != bDay {
-            return aDay.isBefore(bDay)
-        }
-        let aHour: Int = hour
-        let bHour: Int = target.hour
-        if aHour != bHour {
-            return aHour < bHour
-        }
-        let aMinute: Int = minute
-        let bMinute: Int = target.minute
-        return aMinute != bMinute ? aMinute < bMinute : second < target.second
+        getCompareIndex() < target.getCompareIndex()
     }
 
     public func isAfter(_ target: SolarTime) -> Bool {
-        let aDay: SolarDay = solarDay
-        let bDay: SolarDay = target.solarDay
-        if aDay != bDay {
-            return aDay.isAfter(bDay)
-        }
-        let aHour: Int = hour
-        let bHour: Int = target.hour
-        if aHour != bHour {
-            return aHour > bHour
-        }
-        let aMinute: Int = minute
-        let bMinute: Int = target.minute
-        return aMinute != bMinute ? aMinute > bMinute : second > target.second
+        getCompareIndex() > target.getCompareIndex()
     }
 
     public func subtract(_ target: SolarTime) -> Int {
-        var days: Int = solarDay.subtract(target.solarDay)
-        let cs: Int = hour * 3600 + minute * 60 + second
-        let ts: Int = target.hour * 3600 + target.minute * 60 + target.second
-        var seconds: Int = cs - ts
-        if seconds < 0 {
-            seconds += 86400
-            days -= 1
-        }
-        seconds += days * 86400
-        return seconds
+        solarDay.subtract(target.solarDay) * 86400 + getSecondsInDay() - target.getSecondsInDay()
     }
 
     /// 节气

@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   #
 
   spec.name         = "Tyme4Swift"
-  spec.version      = "1.4.6"
+  spec.version      = "1.5.0"
   spec.summary      = "A powerful Chinese calendar library supporting solar calendar, lunar calendar, solar terms, constellations, zodiac signs and more."
 
   # This description is used to generate tags and improve search results.
@@ -25,7 +25,7 @@ Pod::Spec.new do |spec|
   #   * Write the description between the DESC delimiters below.
   #   * Finally, don't worry about the indent, CocoaPods strips it!
   spec.description  = <<-DESC
-Tyme是一个非常强大的日历工具库，可以看作Lunar的升级版，拥有更优的设计和扩展性，支持公历和农历、星座、干支、生肖、节气、法定假日等。
+Tyme是一个非常强大的日历工具库，可以看作Lunar的升级版，拥有更优的设计和扩展性，支持公历、农历、藏历、回历、星座、干支、生肖、节气、月相、法定假日等。
                    DESC
 
   spec.homepage     = "https://github.com/6tail/tyme4swift"

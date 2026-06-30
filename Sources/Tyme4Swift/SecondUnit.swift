@@ -19,14 +19,17 @@ public class SecondUnit: DayUnit {
     }
     
     public class func validate(_ hour: Int, _ minute: Int, _ second: Int) throws {
-        if hour < 0 || hour > 23 {
-            throw ArgumentError("illegal hour: \(hour)")
-        }
-        if minute < 0 || minute > 59 {
-            throw ArgumentError("illegal minute: \(hour)")
-        }
-        if second < 0 || second > 59 {
-            throw ArgumentError("illegal second: \(hour)")
-        }
+        try validateRange(hour, 0, 23, "hour")
+        try validateRange(minute, 0, 59, "minute")
+        try validateRange(second, 0, 59, "second")
+    }
+    
+    /// 当天秒数
+    public func getSecondsInDay() -> Int {
+        hour * 3600 + minute * 60 + second
+    }
+    
+    public override func getCompareIndex() -> Int {
+        super.getCompareIndex() * 86400 + getSecondsInDay()
     }
 }

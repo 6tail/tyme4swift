@@ -9,9 +9,7 @@ public class SolarYear: YearUnit {
     }
     
     public class func validate(_ year: Int) throws {
-        if year < 1 || year > 9999 {
-            throw ArgumentError("illegal solar year: \(year)")
-        }
+        try validateRange(year, 1, 9999, "solar year")
     }
 
     public class func fromYear(_ year: Int) throws -> Self {

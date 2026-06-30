@@ -14,9 +14,7 @@ public class SolarSeason: YearUnit {
     }
     
     public class func validate(_ year: Int, _ index: Int) throws {
-        if index < 0 || index > 3 {
-            throw ArgumentError("illegal solar season index: \(index)")
-        }
+        try validateRange(index, 0, 3, "solar season index")
         try SolarYear.validate(year)
     }
 

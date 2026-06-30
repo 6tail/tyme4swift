@@ -11,9 +11,7 @@ public class SixtyCycleYear: AbstractTyme {
     }
     
     public class func validate(_ year: Int) throws {
-        if year < 1 || year > 9999 {
-            throw ArgumentError("illegal sixty cycle year: \(year)")
-        }
+        try validateRange(year, -1, 9999, "sixty cycle year")
     }
 
     /// 从年初始化

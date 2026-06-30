@@ -12,9 +12,7 @@ public class RabByungYear: AbstractTyme {
     public private(set) var zodiacIndex: Int
     
     public class func validate(_ year: Int) throws {
-        if year < 1027 || year > 9999 {
-            throw ArgumentError("illegal rab-byung year: \(year)")
-        }
+        try validateRange(year, 1027, 9999, "rab-byung year")
     }
 
     required init(_ rabByungIndex: Int, _ elementIndex: Int, _ zodiacIndex: Int) throws {

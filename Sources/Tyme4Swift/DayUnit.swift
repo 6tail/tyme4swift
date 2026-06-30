@@ -9,4 +9,8 @@ public class DayUnit: MonthUnit {
         self.day = day
         try super.init(year, month)
     }
+    
+    public override func getCompareIndex() -> Int {
+        super.getCompareIndex() + day
+    }
 }

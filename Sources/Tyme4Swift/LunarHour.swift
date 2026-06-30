@@ -33,19 +33,9 @@ public class LunarHour: SecondUnit {
         if n == 0 {
             return try! Self.fromYmdHms(year, month, day, hour, minute, second)
         }
-
         let h: Int = hour + n * 2
-        let diff: Int = h < 0 ? -1 : 1
-        var hour: Int = abs(h)
-        var days: Int = hour / 24 * diff
-        hour = (hour % 24) * diff
-        if hour < 0 {
-            hour += 24
-            days -= 1
-        }
-
-        let d: LunarDay = try lunarDay.next(days)
-        return try! Self.fromYmdHms(d.year, d.month, d.day, hour, minute, second)
+        let d: LunarDay = try lunarDay.next(floorDiv(h, 24))
+        return try Self.fromYmdHms(d.year, d.month, d.day, indexOf(h, 24), minute, second)
     }
 
     public var sixtyCycle: SixtyCycle {
@@ -63,35 +53,11 @@ public class LunarHour: SecondUnit {
     }
 
     public func isBefore(_ target: LunarHour) -> Bool {
-        let aDay: LunarDay = lunarDay
-        let bDay: LunarDay = target.lunarDay
-        if aDay != bDay {
-            return aDay.isBefore(bDay)
-        }
-        let aHour: Int = hour
-        let bHour: Int = target.hour
-        if aHour != bHour {
-            return aHour < bHour
-        }
-        let aMinute: Int = minute
-        let bMinute: Int = target.minute
-        return aMinute != bMinute ? aMinute < bMinute : second < target.second
+        getCompareIndex() < target.getCompareIndex()
     }
     
     public func isAfter(_ target: LunarHour) -> Bool {
-        let aDay: LunarDay = lunarDay
-        let bDay: LunarDay = target.lunarDay
-        if aDay != bDay {
-            return aDay.isAfter(bDay)
-        }
-        let aHour: Int = hour
-        let bHour: Int = target.hour
-        if aHour != bHour {
-            return aHour > bHour
-        }
-        let aMinute: Int = minute
-        let bMinute: Int = target.minute
-        return aMinute != bMinute ? aMinute > bMinute : second > target.second
+        getCompareIndex() > target.getCompareIndex()
     }
 
     /// 黄道黑道十二神

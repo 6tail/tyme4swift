@@ -45,25 +45,11 @@ public class LunarDay: DayUnit {
     }
 
     public func isBefore(_ target: LunarDay) -> Bool {
-        if (year != target.year) {
-            return year < target.year
-        }
-        if month != target.month {
-            let t: Int = abs(target.month)
-            return month == t || abs(month) < t
-        }
-        return day < target.day
+        getCompareIndex() > target.getCompareIndex()
     }
     
     public func isAfter(_ target: LunarDay) -> Bool {
-        if (year != target.year) {
-            return year > target.year
-        }
-        if month != target.month {
-            let t: Int = abs(month)
-            return t == target.month || t > abs(target.month)
-        }
-        return day > target.day
+        getCompareIndex() < target.getCompareIndex()
     }
 
     /// 星期

@@ -9,4 +9,8 @@ public class MonthUnit: YearUnit {
         self.month = month
         try super.init(year)
     }
+    
+    public override func getCompareIndex() -> Int {
+        super.getCompareIndex() + (month > 0 ? month * 2 : -month * 2 + 1) * 100
+    }
 }

@@ -1,10 +1,10 @@
 import Foundation
 
 public class ShouXingUtil {
-    public static var PI_2: Double = Double(2) * Double.pi
+    public static var PI_2: Double = 2 * Double.pi
     public static var ONE_THIRD: Double = Double(1) / Double(3)
     public static var SECOND_PER_DAY: Int = 86400
-    public static var SECOND_PER_RAD: Double = Double(180 * 3600) / Double.pi
+    public static var SECOND_PER_RAD: Double = 648000 / Double.pi
     private static var NUT_B: [Double] = [
         2.1824, -33.75705, 36e-6, -1720, 920,
         3.5069, 1256.66393, 11e-6, -132, 57,
@@ -327,18 +327,18 @@ public class ShouXingUtil {
     }
 
     public class func nutationLon2(t: Double) -> Double {
-        var a: Double = Double(-1.742) * t
+        var a: Double = -1.742 * t
         let t2: Double = t * t
         var dl: Double = 0
         for i in stride(from: 0, to: NUT_B.count, by: 5) {
             dl += (NUT_B[i + 3] + a) * sin(NUT_B[i] + NUT_B[i + 1] * t + NUT_B[i + 2] * t2)
             a = 0
         }
-        return dl / Double(100) / SECOND_PER_RAD
+        return dl / 100 / SECOND_PER_RAD
     }
 
     public class func eLon(pt: Double, n: Int) -> Double {
-        let t: Double = pt / Double(10)
+        let t: Double = pt / 10
         var v: Double = 0
         var tn: Double = 1
         let pn: Int = 1
@@ -355,7 +355,7 @@ public class ShouXingUtil {
             if n < 0 {
                 m = n2
             } else {
-                m = Int(Double(3 * n * n0) / m0 + Double(0.5)) + n1
+                m = Int(Double(3 * n * n0) / m0 + 0.5) + n1
                 if i != 0 {
                     m += 3
                 }
@@ -372,7 +372,7 @@ public class ShouXingUtil {
         }
         v /= XL0[0]
         let t2: Double = t * t
-        v += (Double(-0.0728) - Double(2.7702) * t - Double(1.1019) * t2 - Double(0.0996) * t2 * t) / SECOND_PER_RAD
+        v += (-0.0728 - 2.7702 * t - 1.1019 * t2 - 0.0996 * t2 * t) / SECOND_PER_RAD
         return v
     }
 
@@ -385,7 +385,7 @@ public class ShouXingUtil {
         var t3: Double = t2 * t
         var t4: Double = t3 * t
         let t5: Double = t4 * t
-        let tx: Double = t - Double(10)
+        let tx: Double = t - 10
         v += (3.81034409 + 8399.684730072 * t - 3.319e-05 * t2 + 3.11e-08 * t3 - 2.033e-10 * t4) * SECOND_PER_RAD
         v += 5028.792262 * t + 1.1124406 * t2 + 0.00007699 * t3 - 0.000023479 * t4 - 0.0000000178 * t5
         if tx > 0 {
@@ -402,7 +402,7 @@ public class ShouXingUtil {
         for i in 0 ..< ob.count {
             let f: [Double] = ob[i]
             let l = f.count
-            var m = Int(Double(n * l) / Double(obl) + Double(0.5))
+            var m = Int(Double(n * l) / Double(obl) + 0.5)
             if i > 0 {
                 m += 6
             }
@@ -450,10 +450,10 @@ public class ShouXingUtil {
         let t0: Double = DT_AT[size - 1]
         if y >= y0 {
             let jsd: Double = 31
-            if y > y0 + Double(100) {
+            if y > y0 + 100 {
                 return dtExt(y: y, jsd: jsd)
             }
-            return dtExt(y: y, jsd: jsd) - (dtExt(y: y0, jsd: jsd) - t0) * (y0 + Double(100) - y) / Double(100)
+            return dtExt(y: y, jsd: jsd) - (dtExt(y: y0, jsd: jsd) - t0) * (y0 + 100 - y) / 100
         }
         var i: Int = 0
         while i < size {
@@ -462,25 +462,25 @@ public class ShouXingUtil {
             }
             i += 5
         }
-        let t1: Double = (y - DT_AT[i]) / (DT_AT[i + 5] - DT_AT[i]) * Double(10)
+        let t1: Double = (y - DT_AT[i]) / (DT_AT[i + 5] - DT_AT[i]) * 10
         let t2 = t1 * t1
         let t3 = t2 * t1
         return DT_AT[i + 1] + DT_AT[i + 2] * t1 + DT_AT[i + 3] * t2 + DT_AT[i + 4] * t3
     }
 
     public class func dtT(t: Double) -> Double {
-        dtCalc(y: t / Double(365.2425) + Double(2000)) / Double(SECOND_PER_DAY)
+        dtCalc(y: t / 365.2425 + 2000) / Double(SECOND_PER_DAY)
     }
 
     public class func mv(t: Double) -> Double {
-        var v: Double = Double(8399.71) - Double(914) * sin(0.7848 + 8328.691425 * t + 0.0001523 * t * t)
+        var v: Double = 8399.71 - 914 * sin(0.7848 + 8328.691425 * t + 0.0001523 * t * t)
         v -= 179 * sin(2.543 + 15542.7543 * t) + 160 * sin(0.1874 + 7214.0629 * t) + 62 * sin(3.14 + 16657.3828 * t) + 34 * sin(4.827 + 16866.9323 * t) + 22 * sin(4.9 + 23871.4457 * t) + 12 * sin(2.59 + 14914.4523 * t) + 7 * sin(0.23 + 6585.7609 * t) + 5 * sin(0.9 + 25195.624 * t) + 5 * sin(2.32 - 7700.3895 * t) + 5 * sin(3.88 + 8956.9934 * t) + 5 * sin(0.49 + 7771.3771 * t)
         return v
     }
 
     public class func saLonT(w: Double) -> Double {
         var v: Double = 628.3319653318
-        var t: Double = (w - Double(1.75347) - Double.pi) / v
+        var t: Double = (w - 1.75347 - Double.pi) / v
         v = ev(t: t)
         t += (w - saLon(t: t, n: 10)) / v
         v = ev(t: t)
@@ -489,12 +489,12 @@ public class ShouXingUtil {
     }
 
     public class func msaLon(t: Double, mn: Int, sn: Int) -> Double {
-        mLon(t: t, pn: mn) + Double(-3.4e-6) - (eLon(pt: t, n: sn) + gxcSunLon(t: t) + Double.pi)
+        mLon(t: t, pn: mn) + -3.4e-6 - (eLon(pt: t, n: sn) + gxcSunLon(t: t) + Double.pi)
     }
 
     public class func msaLonT(w: Double) -> Double {
         var v: Double = 7771.37714500204
-        var t: Double = (w + Double(1.08472)) / v
+        var t: Double = (w + 1.08472) / v
         t += (w - msaLon(t: t, mn: 3, sn: 3)) / v
         v = mv(t: t) - ev(t: t)
         t += (w - msaLon(t: t, mn: 20, sn: 10)) / v
@@ -512,7 +512,7 @@ public class ShouXingUtil {
 
     public class func msaLonT2(w: Double) -> Double {
         var v: Double = 7771.37714500204
-        var t: Double = (w + Double(1.08472)) / v
+        var t: Double = (w + 1.08472) / v
         var t2: Double = t * t
         t -= (-0.00003309 * t2 + 0.10976 * cos(0.784758 + 8328.6914246 * t + 0.000152292 * t2) + 0.02224 * cos(0.18740 + 7214.0628654 * t - 0.00021848 * t2) - 0.03342 * cos(4.669257 + 628.307585 * t)) / v
         t2 = t * t
@@ -525,115 +525,90 @@ public class ShouXingUtil {
     public class func qiHigh(w: Double) -> Double {
         var t: Double = saLonT2(w: w) * 36525
         t = t - dtT(t: t) + ONE_THIRD
-        let v: Double = (t + Double(0.5)).truncatingRemainder(dividingBy: 1) * Double(SECOND_PER_DAY)
-        if v < Double(1200) || v > Double(SECOND_PER_DAY - 1200) {
+        let v: Double = (t + 0.5).truncatingRemainder(dividingBy: 1) * Double(SECOND_PER_DAY)
+        if v < 1200 || v > Double(SECOND_PER_DAY - 1200) {
             t = saLonT(w: w) * 36525 - dtT(t: t) + ONE_THIRD
         }
         return t
     }
 
     public class func shuoHigh(w: Double) -> Double {
-        var t: Double = msaLonT2(w: w) * Double(36525)
+        var t: Double = msaLonT2(w: w) * 36525
         t = t - dtT(t: t) + ONE_THIRD
-        let v: Double = (t + Double(0.5)).truncatingRemainder(dividingBy: 1) * Double(SECOND_PER_DAY)
-        if v < Double(1800) || v > Double(SECOND_PER_DAY - 1800) {
-            t = msaLonT(w: w) * Double(36525) - dtT(t: t) + ONE_THIRD
+        let v: Double = (t + 0.5).truncatingRemainder(dividingBy: 1) * Double(SECOND_PER_DAY)
+        if v < 1800 || v > Double(SECOND_PER_DAY - 1800) {
+            t = msaLonT(w: w) * 36525 - dtT(t: t) + ONE_THIRD
         }
         return t
     }
 
     public class func qiLow(w: Double) -> Double {
         let v: Double = 628.3319653318
-        var t: Double = (w - Double(4.895062166)) / v
+        var t: Double = (w - 4.895062166) / v
         t -= (53 * t * t + 334116 * cos(4.67 + 628.307585 * t) + 2061 * cos(2.678 + 628.3076 * t) * t) / v / 10000000
         let n: Double = 48950621.66 + 6283319653.318 * t + 53 * t * t + 334166 * cos(4.669257 + 628.307585 * t) + 3489 * cos(4.6261 + 1256.61517 * t) + 2060.6 * cos(2.67823 + 628.307585 * t) * t - 994 - 834 * sin(2.1824 - 33.75705 * t)
-        t -= (n / Double(10000000) - w) / Double(628.332) + (Double(32) * (t + Double(1.8)) * (t + Double(1.8)) - Double(20)) / Double(SECOND_PER_DAY) / Double(36525)
-        return t * Double(36525) + ONE_THIRD
+        t -= (n / 10000000 - w) / 628.332 + (32 * (t + 1.8) * (t + 1.8) - 20) / Double(SECOND_PER_DAY) / 36525
+        return t * 36525 + ONE_THIRD
     }
 
     public class func shuoLow(w: Double) -> Double {
         let v: Double = 7771.37714500204
-        var t: Double = (w + Double(1.08472)) / v
-        t -= (Double(-0.0000331) * t * t + Double(0.10976) * cos(Double(0.785) + Double(8328.6914) * t) + Double(0.02224) * cos(Double(0.187) + Double(7214.0629) * t) - Double(0.03342) * cos(Double(4.669) + Double(628.3076) * t)) / v + (Double(32) * (t + Double(1.8)) * (t + Double(1.8)) - Double(20)) / Double(SECOND_PER_DAY) / Double(36525)
-        return t * Double(36525) + ONE_THIRD
+        var t: Double = (w + 1.08472) / v
+        t -= (-0.0000331 * t * t + 0.10976 * cos(0.785 + 8328.6914 * t) + 0.02224 * cos(0.187 + 7214.0629 * t) - 0.03342 * cos(4.669 + 628.3076 * t)) / v + (32 * (t + 1.8) * (t + 1.8) - 20) / Double(SECOND_PER_DAY) / 36525
+        return t * 36525 + ONE_THIRD
     }
-
-    public class func calcShuo(_ pjd: Double) -> Double {
-        let size: Int = SHUO_KB.count
+    
+    public class func qiShuo(isQi: Bool, isHigh: Bool, jd: Double, pc: Double) -> Double {
+        // 2451259是1999.3.21，太阳视黄经为0，春分；2451551是2000.1.7的那个朔日，黄经差为0
+        let w: Double = isQi ? floor((jd + pc - 2451259) / 365.2422 * 24) * Double.pi / 12 : floor((jd + pc - 2451551) / 29.5306) * Double.pi * 2
+        let d: Double = isQi ? (isHigh ? qiHigh(w: w) : qiLow(w: w)) : isHigh ? shuoHigh(w: w) : shuoLow(w: w)
+        return floor(d + 0.5)
+    }
+    
+    public class func calc(isQi: Bool, jd: Double, kb: [Double], pc: Double, fkb: String) -> Double {
+        let size: Int = kb.count
         var d: Double = 0
-        let pc: Double = 14
-        let jd: Double = pjd + JulianDay.J2000
-        let f1: Double = SHUO_KB[0] - pc
-        let f2: Double = SHUO_KB[size - 1] - pc
-        let f3: Double = 2436935
-        if jd < f1 || jd >= f3 {
-            d = floor(shuoHigh(w: floor((jd + pc - Double(2451551)) / Double(29.5306)) * Double.pi * Double(2)) + Double(0.5))
-        } else if jd >= f1 && jd < f2 {
+        let j: Double = jd + JulianDay.J2000
+        let f1: Double = kb[0] - pc
+        let f2: Double = kb[size - 1] - pc
+        if j < f1 || j >= 2436935 {
+            d = qiShuo(isQi: isQi, isHigh: true, jd: j, pc: pc)
+        } else if j >= f1 && j < f2 {
             var i: Int = 0
             while i < size {
-                if jd + pc < SHUO_KB[i + 2] {
+                if j + pc < kb[i + 2] {
                     break
                 }
                 i += 2
             }
-            d = SHUO_KB[i] + SHUO_KB[i + 1] * floor((jd + pc - SHUO_KB[i]) / SHUO_KB[i + 1])
-            d = floor(d + Double(0.5))
-            if Int(d) == 1683460 {
-                d += Double(1)
+            d = floor(kb[i] + kb[i + 1] * floor((j + pc - kb[i]) / kb[i + 1]) + 0.5)
+            if !isQi && Int(d) == 1683460 {
+                d += 1
             }
             d -= JulianDay.J2000
-        } else if jd >= f2 && jd < f3 {
-            d = floor(shuoLow(w: floor((jd + pc - Double(2451551)) / Double(29.5306)) * Double.pi * Double(2)) + Double(0.5))
-            let from: Int = Int((jd - f2) / Double(29.5306))
-            let n = SB[SB.index(SB.startIndex, offsetBy: from)]
+        } else if j >= f2 {
+            d = qiShuo(isQi: isQi, isHigh: false, jd: j, pc: pc)
+            let from: Int = Int(isQi ? (j - f2) / 365.2422 * 24 : (j - f2) / 29.5306)
+            let n = fkb[fkb.index(fkb.startIndex, offsetBy: from)]
             if "1" == n {
-                d += Double(1)
+                d += 1
             } else if "2" == n {
-                d -= Double(1)
+                d -= 1
             }
         }
         return d
     }
 
-    public class func calcQi(_ pjd: Double) -> Double {
-        let size: Int = QI_KB.count
-        var d: Double = 0
-        let pc: Double = 7
-        let jd: Double = pjd + JulianDay.J2000
-        let f1: Double = QI_KB[0] - pc
-        let f2: Double = QI_KB[size - 1] - pc
-        let f3: Double = 2436935
-        if jd < f1 || jd >= f3 {
-            d = floor(qiHigh(w: floor((jd + pc - Double(2451259)) / Double(365.2422) * Double(24)) * Double.pi / Double(12)) + Double(0.5))
-        } else if jd >= f1 && jd < f2 {
-            var i: Int = 0
-            while i < size {
-                if jd + pc < QI_KB[i + 2] {
-                    break
-                }
-                i += 2
-            }
-            d = QI_KB[i] + QI_KB[i + 1] * floor((jd + pc - QI_KB[i]) / QI_KB[i + 1])
-            d = floor(d + Double(0.5))
-            if Int(d) == 1683460 {
-                d += Double(1)
-            }
-            d -= JulianDay.J2000
-        } else if jd >= f2 && jd < f3 {
-            d = floor(qiLow(w: floor((jd + pc - Double(2451259)) / Double(365.2422) * Double(24)) * Double.pi / Double(12)) + Double(0.5))
-            let from: Int = Int((jd - f2) / Double(365.2422) * Double(24))
-            let n = QB[QB.index(QB.startIndex, offsetBy: from)]
-            if "1" == n {
-                d += Double(1)
-            } else if "2" == n {
-                d -= Double(1)
-            }
-        }
-        return d
+    public class func calcShuo(_ jd: Double) -> Double {
+        calc(isQi: false, jd: jd, kb: SHUO_KB, pc: 14, fkb: SB)
+    }
+
+    public class func calcQi(_ jd: Double) -> Double {
+        calc(isQi: true, jd: jd, kb: QI_KB, pc: 7, fkb: QB)
     }
 
     public class func qiAccurate(w: Double) -> Double {
-        let t: Double = saLonT(w: w) * Double(36525)
+        let t: Double = saLonT(w: w) * 36525
         return t - dtT(t: t) + ONE_THIRD
     }
 

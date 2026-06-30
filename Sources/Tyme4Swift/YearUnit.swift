@@ -8,4 +8,9 @@ public class YearUnit: AbstractTyme {
     internal init(_ year: Int) throws {
         self.year = year
     }
+    
+    /// 用于比较大小的索引
+    public func getCompareIndex() -> Int {
+        year * 10000
+    }
 }

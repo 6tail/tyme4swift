@@ -18,12 +18,8 @@ public class WeekUnit: MonthUnit {
     }
     
     public class func validate(_ index: Int, _ start: Int) throws {
-        if index < 0 || index > 5 {
-            throw ArgumentError("illegal week index: \(index)")
-        }
-        if start < 0 || start > 6 {
-            throw ArgumentError("illegal week start: \(start)")
-        }
+        try validateRange(index, 0, 5, "week index")
+        try validateRange(start, 0, 6, "week start")
     }
     
     public var start: Week {
